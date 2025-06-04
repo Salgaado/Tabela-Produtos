@@ -221,7 +221,7 @@ export function ProductsPage() {
               <div className="flex flex-col">
                 <label
                   htmlFor="categories"
-                  className="mb-1 text-sm font-medium text-gray-700"
+                  className="mb-1 text-sm font-medium text-gray-700 border-gray-300"
                 >
                   Filtrar por categoria:
                 </label>
@@ -230,16 +230,22 @@ export function ProductsPage() {
                   onValueChange={(values) =>
                     setSelectedCategories(values as string[])
                   }
-                  className="w-64 bg-white border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md"
+                  className="w-64 focus:border-indigo-500 focus:ring-indigo-500 rounded-md"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione categorias" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className ="bg-white border border-gray-300 rounded-md shadow-lg">	
                     {categories.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
+                      <SelectItem
+                      key={cat}
+                      value={cat}
+                      className="group cursor-pointer"
+                    >         
+                    <span className="group-hover:bg-[#4F46E5] group-hover:text-white block w-full px-2 py-1 rounded">
+                      {cat}
+                    </span>
+                  </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -256,7 +262,7 @@ export function ProductsPage() {
                     className={`px-3 py-1 rounded-md transition ${
                       sortOrder === "asc"
                         ? "bg-indigo-600 text-white"
-                        : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
+                        : "bg-white text-gray-700 border border-gray-300"
                     }`}
                     onClick={() =>
                       setSortOrder((prev) => (prev === "asc" ? "none" : "asc"))
@@ -269,7 +275,7 @@ export function ProductsPage() {
                     className={`px-3 py-1 rounded-md transition ${
                       sortOrder === "desc"
                         ? "bg-indigo-600 text-white"
-                        : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
+                        : "bg-white text-gray-700 border border-gray-300"
                     }`}
                     onClick={() =>
                       setSortOrder((prev) =>
@@ -284,7 +290,7 @@ export function ProductsPage() {
                     className={`px-3 py-1 rounded-md transition ${
                       sortOrder === "none"
                         ? "bg-indigo-600 text-white"
-                        : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
+                        : "bg-white text-gray-700 border border-gray-300"
                     }`}
                     onClick={() => setSortOrder("none")}
                   >
@@ -339,7 +345,7 @@ export function ProductsPage() {
                       R$ {prod.price.toFixed(2)}
                     </TableCell>
                     <TableCell className="px-4 py-3">
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-2 justify-around">
                         {/* Botão Editar */}
                         <Button
                           size="sm"
@@ -441,14 +447,6 @@ export function ProductsPage() {
                     className="bg-white border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md px-3 py-2"
                     placeholder="Nome do produto"
                   />
-                  {/* Mensagem de erro (opcional) */}
-                  {/*
-                  {formState.errors.title && (
-                    <span className="text-xs text-red-500">
-                      Título é obrigatório
-                    </span>
-                  )} 
-                  */}
                 </div>
 
                 {/* PREÇO */}
@@ -487,9 +485,10 @@ export function ProductsPage() {
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione a categoria" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       {categories.map((cat) => (
-                        <SelectItem key={cat} value={cat}>
+                        <SelectItem className="cursor-pointer" 
+                        key={cat} value={cat}>
                           {cat}
                         </SelectItem>
                       ))}
