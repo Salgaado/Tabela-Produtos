@@ -1,19 +1,27 @@
+// tsconfig.json
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
   "compilerOptions": {
+    // ------------------------------------------------------------
+    // Configurações gerais de compilação
+    // ------------------------------------------------------------
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"]
     }
+    
+    // NOTA: removemos "composite" e "declaration", pois não precisamos
+    // gerar .d.ts nem usar referências de projetos neste cenário.
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "src/**/*.json"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

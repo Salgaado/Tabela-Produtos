@@ -23,23 +23,6 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-
-import {
-  Table,
-  TableHeader,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableFooter,
-} from "@/components/ui/table";
 
 import { useForm } from "react-hook-form";
 
@@ -55,7 +38,9 @@ export function ProductsPage() {
   } = useProducts();
 
   const [searchText, setSearchText] = useState<string>("");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  // Agora filtramos por UMA única categoria, não múltiplas
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
 
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -74,11 +59,9 @@ export function ProductsPage() {
       p.title.toLowerCase().includes(searchText.toLowerCase())
     );
 
-    // 2. Filtrar por categorias (se houver)
-    if (selectedCategories.length > 0) {
-      result = result.filter((p: Product) =>
-        selectedCategories.includes(p.category)
-      );
+    // 2. Filtrar por categoria (se houver)
+    if (selectedCategory) {
+      result = result.filter((p: Product) => p.category === selectedCategory);
     }
 
     // 3. Ordenar por preço
@@ -89,7 +72,7 @@ export function ProductsPage() {
     }
 
     return result;
-  }, [productsQuery.data, searchText, selectedCategories, sortOrder]);
+  }, [productsQuery.data, searchText, selectedCategory, sortOrder]);
 
   const categories = categoriesQuery.data || [];
 
@@ -219,38 +202,29 @@ export function ProductsPage() {
                 />
               </div>
 
-              {/* Select múltiplo de categorias */}
+              {/* Select de categoria (única seleção) */}
               <div className="flex flex-col">
                 <label
-                  htmlFor="categories"
-                  className="mb-1 text-sm font-medium text-gray-700 border-gray-300"
+                  htmlFor="filter-category"
+                  className="mb-1 text-sm font-medium text-gray-700"
                 >
                   Filtrar por categoria:
                 </label>
-                <Select
-                  multiple
-                  onValueChange={(values: string[]) =>
-                    setSelectedCategories(values)
+                <select
+                  id="filter-category"
+                  value={selectedCategory}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setSelectedCategory(e.target.value)
                   }
-                  className="w-64 focus:border-indigo-500 focus:ring-indigo-500 rounded-md"
+                  className="w-64 bg-white border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md px-2 py-1"
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione categorias" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border border-gray-300 rounded-md shadow-lg">
-                    {categories.map((cat: string) => (
-                      <SelectItem
-                        key={cat}
-                        value={cat}
-                        className="group cursor-pointer"
-                      >
-                        <span className="group-hover:bg-[#4F46E5] group-hover:text-white block w-full px-2 py-1 rounded">
-                          {cat}
-                        </span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  <option value="">Todas</option>
+                  {categories.map((cat: string) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Botões de ordenação */}
@@ -305,48 +279,46 @@ export function ProductsPage() {
 
           {/* Tabela de produtos */}
           <div className="mt-6 overflow-x-auto">
-            <Table className="min-w-full bg-white rounded-lg shadow">
+            <table className="min-w-full bg-white rounded-lg shadow">
               {/* Cabeçalho da tabela */}
-              <TableHeader className="bg-gray-100">
-                <TableRow>
-                  <TableHead className="px-4 py-3 text-left text-sm font-medium text-gray-700">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
                     ID
-                  </TableHead>
-                  <TableHead className="px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
                     Título
-                  </TableHead>
-                  <TableHead className="px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
                     Categoria
-                  </TableHead>
-                  <TableHead className="px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
                     Preço
-                  </TableHead>
-                  <TableHead className="px-4 py-3 text-left text-sm font-medium text-gray-700">
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
                     Ações
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
+                  </th>
+                </tr>
+              </thead>
 
               {/* Corpo da tabela */}
-              <TableBody>
+              <tbody>
                 {filteredAndSorted.map((prod: Product) => (
-                  <TableRow
+                  <tr
                     key={prod.id}
                     className="hover:bg-gray-50 transition-colors"
                   >
-                    <TableCell className="px-4 py-3 text-sm text-gray-800">
-                      {prod.id}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 max-w-xs truncate text-sm text-gray-800">
+                    <td className="px-4 py-3 text-sm text-gray-800">{prod.id}</td>
+                    <td className="px-4 py-3 max-w-xs truncate text-sm text-gray-800">
                       {prod.title}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-sm text-gray-700">
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-700">
                       {prod.category}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-sm font-semibold text-indigo-600">
+                    </td>
+                    <td className="px-4 py-3 text-sm font-semibold text-indigo-600">
                       R$ {prod.price.toFixed(2)}
-                    </TableCell>
-                    <TableCell className="px-4 py-3">
+                    </td>
+                    <td className="px-4 py-3">
                       <div className="flex space-x-2 justify-around">
                         {/* Botão Editar */}
                         <Button
@@ -401,22 +373,22 @@ export function ProductsPage() {
                           </AlertDialogContent>
                         </AlertDialog>
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
+              </tbody>
 
               {/* Rodapé da tabela */}
-              <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={5}>
+              <tfoot>
+                <tr>
+                  <td colSpan={5}>
                     <div className="text-right pr-4 text-sm text-gray-600">
                       Total de produtos: {filteredAndSorted.length}
                     </div>
-                  </TableCell>
-                </TableRow>
-              </TableFooter>
-            </Table>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
 
           {/* Modal de Criar / Editar */}
@@ -470,7 +442,7 @@ export function ProductsPage() {
                   />
                 </div>
 
-                {/* CATEGORIA */}
+                {/* CATEGORIA (uso de <select> simples) */}
                 <div className="flex flex-col">
                   <label
                     htmlFor="category"
@@ -478,21 +450,18 @@ export function ProductsPage() {
                   >
                     Categoria
                   </label>
-                  <Select
+                  <select
+                    id="category"
                     {...register("category", { required: true })}
-                    className="w-full bg-white border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md"
+                    className="w-full bg-white border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md px-2 py-1"
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione a categoria" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white">
-                      {categories.map((cat: string) => (
-                        <SelectItem key={cat} value={cat} className="cursor-pointer">
-                          {cat}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    <option value="">Selecione a categoria</option>
+                    {categories.map((cat: string) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* DESCRIÇÃO */}
