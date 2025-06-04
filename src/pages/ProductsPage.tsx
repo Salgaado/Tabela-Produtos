@@ -54,40 +54,38 @@ export function ProductsPage() {
     deleteMutation,
   } = useProducts();
 
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState<string>("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
 
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   // Controle do AlertDialog de exclusão
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [productToDelete, setProductToDelete] = useState<Product | null>(
-    null
-  );
+  const [alertOpen, setAlertOpen] = useState<boolean>(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   // Filtrar e ordenar
-  const filteredAndSorted = useMemo(() => {
+  const filteredAndSorted = useMemo<Product[]>(() => {
     const all = productsQuery.data || [];
 
     // 1. Filtrar por título
-    let result = all.filter((p) =>
+    let result = all.filter((p: Product) =>
       p.title.toLowerCase().includes(searchText.toLowerCase())
     );
 
     // 2. Filtrar por categorias (se houver)
     if (selectedCategories.length > 0) {
-      result = result.filter((p) =>
+      result = result.filter((p: Product) =>
         selectedCategories.includes(p.category)
       );
     }
 
     // 3. Ordenar por preço
     if (sortOrder === "asc") {
-      result = [...result].sort((a, b) => a.price - b.price);
+      result = [...result].sort((a: Product, b: Product) => a.price - b.price);
     } else if (sortOrder === "desc") {
-      result = [...result].sort((a, b) => b.price - a.price);
+      result = [...result].sort((a: Product, b: Product) => b.price - a.price);
     }
 
     return result;
@@ -135,7 +133,7 @@ export function ProductsPage() {
     setOpenDialog(true);
   };
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: Omit<Product, "id"> & { id?: number }) => {
     if (editingProduct) {
       // Editar
       await updateMutation.mutateAsync({
@@ -191,8 +189,10 @@ export function ProductsPage() {
           {/* Cabeçalho */}
           <header className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold text-gray-900">Produtos</h1>
-            <Button onClick={openCreateModal} 
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow-sm transition">
+            <Button
+              onClick={openCreateModal}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow-sm transition"
+            >
               Criar produto
             </Button>
           </header>
@@ -212,7 +212,9 @@ export function ProductsPage() {
                   id="search"
                   placeholder="Digite parte do nome..."
                   value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setSearchText(e.target.value)
+                  }
                   className="w-64 bg-white border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md px-3 py-2"
                 />
               </div>
@@ -227,25 +229,25 @@ export function ProductsPage() {
                 </label>
                 <Select
                   multiple
-                  onValueChange={(values) =>
-                    setSelectedCategories(values as string[])
+                  onValueChange={(values: string[]) =>
+                    setSelectedCategories(values)
                   }
                   className="w-64 focus:border-indigo-500 focus:ring-indigo-500 rounded-md"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione categorias" />
                   </SelectTrigger>
-                  <SelectContent className ="bg-white border border-gray-300 rounded-md shadow-lg">	
-                    {categories.map((cat) => (
+                  <SelectContent className="bg-white border border-gray-300 rounded-md shadow-lg">
+                    {categories.map((cat: string) => (
                       <SelectItem
-                      key={cat}
-                      value={cat}
-                      className="group cursor-pointer"
-                    >         
-                    <span className="group-hover:bg-[#4F46E5] group-hover:text-white block w-full px-2 py-1 rounded">
-                      {cat}
-                    </span>
-                  </SelectItem>
+                        key={cat}
+                        value={cat}
+                        className="group cursor-pointer"
+                      >
+                        <span className="group-hover:bg-[#4F46E5] group-hover:text-white block w-full px-2 py-1 rounded">
+                          {cat}
+                        </span>
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -327,7 +329,7 @@ export function ProductsPage() {
 
               {/* Corpo da tabela */}
               <TableBody>
-                {filteredAndSorted.map((prod) => (
+                {filteredAndSorted.map((prod: Product) => (
                   <TableRow
                     key={prod.id}
                     className="hover:bg-gray-50 transition-colors"
@@ -357,9 +359,7 @@ export function ProductsPage() {
 
                         {/* Botão Excluir (AlertDialog) */}
                         <AlertDialog
-                          open={
-                            alertOpen && productToDelete?.id === prod.id
-                          }
+                          open={alertOpen && productToDelete?.id === prod.id}
                           onOpenChange={setAlertOpen}
                         >
                           <AlertDialogTrigger asChild>
@@ -486,9 +486,8 @@ export function ProductsPage() {
                       <SelectValue placeholder="Selecione a categoria" />
                     </SelectTrigger>
                     <SelectContent className="bg-white">
-                      {categories.map((cat) => (
-                        <SelectItem className="cursor-pointer" 
-                        key={cat} value={cat}>
+                      {categories.map((cat: string) => (
+                        <SelectItem key={cat} value={cat} className="cursor-pointer">
                           {cat}
                         </SelectItem>
                       ))}
