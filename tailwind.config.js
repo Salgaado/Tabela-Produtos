@@ -7,6 +7,14 @@ module.exports = {
   ],
   theme: {
   	extend: {
+			colors: {
+        primary: "#1E40AF",
+        secondary: "#F97316",
+      },
+			fontFamily: {
+        sans: ["Inter", "sans-serif"],
+        display: ["Poppins", "sans-serif"],
+      },
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
@@ -57,7 +65,8 @@ module.exports = {
   	}
   },
   plugins: [
-    require("@tailwindcss/forms"),
-      require("tailwindcss-animate")
+    	require("@tailwindcss/forms"),
+      require("tailwindcss-animate"),
+			require("@tailwindcss/typography")
 ],
 };
