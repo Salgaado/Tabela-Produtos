@@ -38,7 +38,7 @@ export function ProductsPage() {
   } = useProducts();
 
   const [searchText, setSearchText] = useState<string>("");
-  // Agora filtramos por UMA única categoria, não múltiplas
+  
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
@@ -46,25 +46,24 @@ export function ProductsPage() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
-  // Controle do AlertDialog de exclusão
+  
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
-  // Filtrar e ordenar
+  
   const filteredAndSorted = useMemo<Product[]>(() => {
     const all = productsQuery.data || [];
 
-    // 1. Filtrar por título
+
     let result = all.filter((p: Product) =>
       p.title.toLowerCase().includes(searchText.toLowerCase())
     );
 
-    // 2. Filtrar por categoria (se houver)
     if (selectedCategory) {
       result = result.filter((p: Product) => p.category === selectedCategory);
     }
 
-    // 3. Ordenar por preço
+    
     if (sortOrder === "asc") {
       result = [...result].sort((a: Product, b: Product) => a.price - b.price);
     } else if (sortOrder === "desc") {
@@ -118,7 +117,7 @@ export function ProductsPage() {
 
   const onSubmit = async (values: Omit<Product, "id"> & { id?: number }) => {
     if (editingProduct) {
-      // Editar
+      
       await updateMutation.mutateAsync({
         id: editingProduct.id,
         title: values.title,
@@ -128,7 +127,7 @@ export function ProductsPage() {
         image: values.image,
       });
     } else {
-      // Criar
+      
       await createMutation.mutateAsync({
         title: values.title,
         price: Number(values.price),
@@ -163,13 +162,9 @@ export function ProductsPage() {
   }
 
   return (
-    // Página com fundo cinza-claro e padding geral
     <div className="min-h-screen bg-gray-100 p-6">
-      {/* Card centralizado */}
       <div className="max-w-screen-lg mx-auto bg-white rounded-2xl shadow-md overflow-hidden">
-        {/* Área interna do card */}
         <div className="p-6 space-y-6">
-          {/* Cabeçalho */}
           <header className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold text-gray-900">Produtos</h1>
             <Button
@@ -180,10 +175,9 @@ export function ProductsPage() {
             </Button>
           </header>
 
-          {/* Seção de filtros */}
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="flex flex-wrap gap-4 items-end">
-              {/* Input de busca por título */}
+
               <div className="flex flex-col">
                 <label
                   htmlFor="search"
@@ -202,7 +196,6 @@ export function ProductsPage() {
                 />
               </div>
 
-              {/* Select de categoria (única seleção) */}
               <div className="flex flex-col">
                 <label
                   htmlFor="filter-category"
@@ -227,7 +220,6 @@ export function ProductsPage() {
                 </select>
               </div>
 
-              {/* Botões de ordenação */}
               <div className="flex flex-col">
                 <label className="mb-1 text-sm font-medium text-gray-700">
                   Ordenar por preço:
@@ -277,10 +269,8 @@ export function ProductsPage() {
             </div>
           </div>
 
-          {/* Tabela de produtos */}
           <div className="mt-6 overflow-x-auto">
             <table className="min-w-full bg-white rounded-lg shadow">
-              {/* Cabeçalho da tabela */}
               <thead className="bg-gray-100">
                 <tr>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
@@ -301,7 +291,6 @@ export function ProductsPage() {
                 </tr>
               </thead>
 
-              {/* Corpo da tabela */}
               <tbody>
                 {filteredAndSorted.map((prod: Product) => (
                   <tr
@@ -320,7 +309,6 @@ export function ProductsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex space-x-2 justify-around">
-                        {/* Botão Editar */}
                         <Button
                           size="sm"
                           className="px-3 py-1 rounded-md bg-gray-600 text-white hover:bg-gray-700 transition"
@@ -329,7 +317,6 @@ export function ProductsPage() {
                           Editar
                         </Button>
 
-                        {/* Botão Excluir (AlertDialog) */}
                         <AlertDialog
                           open={alertOpen && productToDelete?.id === prod.id}
                           onOpenChange={setAlertOpen}
@@ -378,7 +365,6 @@ export function ProductsPage() {
                 ))}
               </tbody>
 
-              {/* Rodapé da tabela */}
               <tfoot>
                 <tr>
                   <td colSpan={5}>
@@ -391,7 +377,6 @@ export function ProductsPage() {
             </table>
           </div>
 
-          {/* Modal de Criar / Editar */}
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogTrigger asChild />
             <DialogContent className="sm:max-w-lg bg-white rounded-lg shadow-lg">
@@ -405,7 +390,6 @@ export function ProductsPage() {
                 onSubmit={handleSubmit(onSubmit)}
                 className="px-6 py-4 space-y-4"
               >
-                {/* TÍTULO */}
                 <div className="flex flex-col">
                   <label
                     htmlFor="title"
@@ -421,7 +405,6 @@ export function ProductsPage() {
                   />
                 </div>
 
-                {/* PREÇO */}
                 <div className="flex flex-col">
                   <label
                     htmlFor="price"
@@ -442,7 +425,6 @@ export function ProductsPage() {
                   />
                 </div>
 
-                {/* CATEGORIA (uso de <select> simples) */}
                 <div className="flex flex-col">
                   <label
                     htmlFor="category"
@@ -464,7 +446,6 @@ export function ProductsPage() {
                   </select>
                 </div>
 
-                {/* DESCRIÇÃO */}
                 <div className="flex flex-col">
                   <label
                     htmlFor="description"
@@ -481,7 +462,6 @@ export function ProductsPage() {
                   />
                 </div>
 
-                {/* IMAGEM (URL) */}
                 <div className="flex flex-col">
                   <label
                     htmlFor="image"
@@ -497,7 +477,7 @@ export function ProductsPage() {
                   />
                 </div>
 
-                {/* Botões no footer do modal */}
+
                 <DialogFooter className="flex justify-end space-x-2 border-t border-gray-200 px-6 py-4">
                   <Button
                     type="button"

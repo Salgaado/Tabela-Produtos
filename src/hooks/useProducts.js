@@ -1,8 +1,8 @@
-// src/hooks/useProducts.ts
+
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient, } from "@tanstack/react-query";
 const BASE_URL = import.meta.env.VITE_API_URL;
-// Funções de fetch e mutações (mesmas do v4)
+
 const fetchProducts = async () => {
     const { data } = await axios.get(`${BASE_URL}/products`);
     return data;
@@ -32,34 +32,32 @@ const deleteProduct = async (id) => {
 };
 export function useProducts() {
     const queryClient = useQueryClient();
-    // === useQuery para listar produtos ===
+
     const productsQuery = useQuery({
         queryKey: ["products"],
         queryFn: fetchProducts,
-        staleTime: 1000 * 60, // 1 minuto
+        staleTime: 1000 * 60, 
         refetchOnWindowFocus: false,
     });
-    // === useQuery para listar categorias ===
+
     const categoriesQuery = useQuery({
         queryKey: ["categories"],
         queryFn: fetchCategories,
-        staleTime: 1000 * 60 * 5, // 5 minutos
+        staleTime: 1000 * 60 * 5, 
     });
-    // === useMutation para criar produto ===
+
     const createMutation = useMutation({
         mutationFn: createProduct,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["products"] });
         },
     });
-    // === useMutation para atualizar produto ===
     const updateMutation = useMutation({
         mutationFn: updateProduct,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["products"] });
         },
     });
-    // === useMutation para deletar produto ===
     const deleteMutation = useMutation({
         mutationFn: deleteProduct,
         onSuccess: () => {

@@ -1,9 +1,7 @@
 // tsconfig.json
 {
   "compilerOptions": {
-    // ------------------------------------------------------------
-    // Configurações gerais de compilação
-    // ------------------------------------------------------------
+
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
@@ -19,8 +17,6 @@
       "@/*": ["src/*"]
     }
     
-    // NOTA: removemos "composite" e "declaration", pois não precisamos
-    // gerar .d.ts nem usar referências de projetos neste cenário.
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

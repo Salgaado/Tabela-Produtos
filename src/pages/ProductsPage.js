@@ -1,5 +1,4 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-// src/pages/ProductsPage.tsx
 import { useMemo, useState } from "react";
 import { useProducts } from "@/hooks/useProducts";
 import { Button } from "@/components/ui/button";
@@ -10,24 +9,24 @@ import { useForm } from "react-hook-form";
 export function ProductsPage() {
     const { productsQuery, categoriesQuery, createMutation, updateMutation, deleteMutation, } = useProducts();
     const [searchText, setSearchText] = useState("");
-    // Agora filtramos por UMA única categoria, não múltiplas
+
     const [selectedCategory, setSelectedCategory] = useState("");
     const [sortOrder, setSortOrder] = useState("none");
     const [openDialog, setOpenDialog] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
-    // Controle do AlertDialog de exclusão
+
     const [alertOpen, setAlertOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
-    // Filtrar e ordenar
+
     const filteredAndSorted = useMemo(() => {
         const all = productsQuery.data || [];
-        // 1. Filtrar por título
+
         let result = all.filter((p) => p.title.toLowerCase().includes(searchText.toLowerCase()));
-        // 2. Filtrar por categoria (se houver)
+
         if (selectedCategory) {
             result = result.filter((p) => p.category === selectedCategory);
         }
-        // 3. Ordenar por preço
+
         if (sortOrder === "asc") {
             result = [...result].sort((a, b) => a.price - b.price);
         }
@@ -71,7 +70,7 @@ export function ProductsPage() {
     };
     const onSubmit = async (values) => {
         if (editingProduct) {
-            // Editar
+
             await updateMutation.mutateAsync({
                 id: editingProduct.id,
                 title: values.title,
@@ -82,7 +81,7 @@ export function ProductsPage() {
             });
         }
         else {
-            // Criar
+
             await createMutation.mutateAsync({
                 title: values.title,
                 price: Number(values.price),
@@ -106,7 +105,7 @@ export function ProductsPage() {
         return (_jsx("div", { className: "min-h-[300px] flex items-center justify-center text-red-500", children: "Erro ao carregar produtos ou categorias." }));
     }
     return (
-    // Página com fundo cinza-claro e padding geral
+
     _jsx("div", { className: "min-h-screen bg-gray-100 p-6", children: _jsx("div", { className: "max-w-screen-lg mx-auto bg-white rounded-2xl shadow-md overflow-hidden", children: _jsxs("div", { className: "p-6 space-y-6", children: [_jsxs("header", { className: "flex items-center justify-between", children: [_jsx("h1", { className: "text-2xl font-semibold text-gray-900", children: "Produtos" }), _jsx(Button, { onClick: openCreateModal, className: "bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow-sm transition", children: "Criar produto" })] }), _jsx("div", { className: "bg-gray-50 p-4 rounded-lg", children: _jsxs("div", { className: "flex flex-wrap gap-4 items-end", children: [_jsxs("div", { className: "flex flex-col", children: [_jsx("label", { htmlFor: "search", className: "mb-1 text-sm font-medium text-gray-700", children: "Buscar por t\u00EDtulo:" }), _jsx(Input, { id: "search", placeholder: "Digite parte do nome...", value: searchText, onChange: (e) => setSearchText(e.target.value), className: "w-64 bg-white border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md px-3 py-2" })] }), _jsxs("div", { className: "flex flex-col", children: [_jsx("label", { htmlFor: "filter-category", className: "mb-1 text-sm font-medium text-gray-700", children: "Filtrar por categoria:" }), _jsxs("select", { id: "filter-category", value: selectedCategory, onChange: (e) => setSelectedCategory(e.target.value), className: "w-64 bg-white border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md px-2 py-1", children: [_jsx("option", { value: "", children: "Todas" }), categories.map((cat) => (_jsx("option", { value: cat, children: cat }, cat)))] })] }), _jsxs("div", { className: "flex flex-col", children: [_jsx("label", { className: "mb-1 text-sm font-medium text-gray-700", children: "Ordenar por pre\u00E7o:" }), _jsxs("div", { className: "flex space-x-2", children: [_jsx(Button, { size: "sm", className: `px-3 py-1 rounded-md transition ${sortOrder === "asc"
                                                         ? "bg-indigo-600 text-white"
                                                         : "bg-white text-gray-700 border border-gray-300"}`, onClick: () => setSortOrder((prev) => (prev === "asc" ? "none" : "asc")), children: "Crescente" }), _jsx(Button, { size: "sm", className: `px-3 py-1 rounded-md transition ${sortOrder === "desc"
