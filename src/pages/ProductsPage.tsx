@@ -1,5 +1,5 @@
 // src/pages/ProductsPage.tsx
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Product } from "@/types/product";
 import { useProducts } from "@/hooks/useProducts";
 
