@@ -1,54 +1,43 @@
-# React + TypeScript + Vite
+# Tabela de Produtos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este repositório contém um aplicativo web em React + TypeScript para listar, filtrar e gerenciar produtos via chamadas a uma API remota. Ele foi configurado para fazer deploy tanto no Vercel (com variáveis de ambiente) quanto no GitHub Pages (gerando a saída em `docs/`).
 
-Currently, two official plugins are available:
+## Visão Geral
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Frontend:** React + TypeScript + Vite  
+- **UI Components:** Radix UI, Tailwind CSS  
+- **Gerenciamento de Estado & Formulários:** React Hook Form, React Query  
+- **Deploy:** Vercel (produção) e GitHub Pages (estático em `/docs`)
 
-## Expanding the ESLint configuration
+## Funcionalidades
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Exibição de lista de produtos com ID, título, categoria e preço  
+- Filtro por título (campo de busca)  
+- Filtro por categoria (select único)  
+- Ordenação por preço (crescente, decrescente ou normal)  
+- Criação, edição e exclusão de produtos (via modal e alert dialog)  
+- Tratamento de loading e erros na tela  
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+Visite https://tabela-produtos-5k9azy0p6-daniel-salgados-projects-206cd70d.vercel.app/ para ver a page em produção
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+├─ docs/                
+│   ├─ assets/
+│   ├─ index.html
+│   └─ .nojekyll
+├─ public/                
+├─ src/
+│   ├─ components/ui/    
+│   ├─ hooks/
+│   │   └─ useProducts.ts 
+│   │   └─ utils.ts     
+│   ├─ pages/
+│   │   └─ ProductsPage.tsx 
+│   ├─ types/
+│   │   └─ product.ts      
+│   ├─ App.tsx
+│   ├─ main.tsx
+│   └─ vite-env.d.ts
+├─ tsconfig.json        
+├─ vite.config.ts         
+├─ package.json
+└─ README.md             
